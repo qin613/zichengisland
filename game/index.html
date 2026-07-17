@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>嫣落尘渊 - 古风穿越乙女游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <h1 class="game-title">嫣落尘渊</h1>
+                <p class="game-subtitle">古风穿越 · 乙女剧情</p>
+                <div class="name-input-area">
+                    <label for="player-name">女主姓名</label>
+                    <input type="text" id="player-name" value="姜嫣" maxlength="4">
+                </div>
+                <button class="btn-start" onclick="startGame()">开始游戏</button>
+                <button class="btn-continue" onclick="showSaveLoad(true)" id="btn-continue" style="display:none;">继续游戏</button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="top-bar">
+                <div class="scene-title-container">
+                    <div class="scene-title" id="scene-title"></div>
+                    <button class="btn-menu btn-back" onclick="returnToHome()">返回</button>
+                </div>
+                <div class="menu-buttons">
+                    <button class="btn-menu" onclick="showSaveLoad()">存档</button>
+                    <button class="btn-menu" onclick="showAffection()">好感</button>
+                    <button class="btn-menu" onclick="showStats()">属性</button>
+                    <button class="btn-menu" onclick="restartGame()">重置</button>
+                    <button class="btn-menu btn-music" onclick="toggleMusic()" id="btn-music">🎵</button>
+                </div>
+            </div>
+
+            <div class="game-area">
+                <div class="background-layer" id="background"></div>
+                <div class="character-layer">
+                    <img class="character-left" id="char-left" src="" alt="" />
+                    <img class="character-center" id="char-center" src="" alt="" />
+                    <img class="character-right" id="char-right" src="" alt="" />
+                </div>
+            </div>
+
+            <div class="dialog-box">
+                <div class="dialog-name" id="dialog-name"></div>
+                <div class="dialog-text" id="dialog-text"></div>
+                <div class="dialog-choices" id="dialog-choices"></div>
+                <div class="dialog-input-area">
+                    <input type="text" id="custom-input" placeholder="输入你的回应..." maxlength="50">
+                    <button class="btn-input" onclick="sendCustomInput()">发送</button>
+                </div>
+            </div>
+
+            <div class="affection-tip" id="affection-tip"></div>
+        </div>
+
+        <div id="save-load-modal" class="modal">
+            <div class="modal-content">
+                <h2>存档管理</h2>
+                <div class="save-slots">
+                    <div class="save-slot" onclick="handleSaveSlot(1)">
+                        <div class="slot-num">存档位 1</div>
+                        <div class="slot-name" id="save-name-1">点击存档</div>
+                        <div class="slot-time" id="save-time-1"></div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSave(1)">删除</button>
+                        <button class="btn-rename" onclick="event.stopPropagation(); renameSave(1)">重命名</button>
+                    </div>
+                    <div class="save-slot" onclick="handleSaveSlot(2)">
+                        <div class="slot-num">存档位 2</div>
+                        <div class="slot-name" id="save-name-2">点击存档</div>
+                        <div class="slot-time" id="save-time-2"></div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSave(2)">删除</button>
+                        <button class="btn-rename" onclick="event.stopPropagation(); renameSave(2)">重命名</button>
+                    </div>
+                    <div class="save-slot" onclick="handleSaveSlot(3)">
+                        <div class="slot-num">存档位 3</div>
+                        <div class="slot-name" id="save-name-3">点击存档</div>
+                        <div class="slot-time" id="save-time-3"></div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSave(3)">删除</button>
+                        <button class="btn-rename" onclick="event.stopPropagation(); renameSave(3)">重命名</button>
+                    </div>
+                    <div class="save-slot" onclick="handleSaveSlot(4)">
+                        <div class="slot-num">存档位 4</div>
+                        <div class="slot-name" id="save-name-4">点击存档</div>
+                        <div class="slot-time" id="save-time-4"></div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSave(4)">删除</button>
+                        <button class="btn-rename" onclick="event.stopPropagation(); renameSave(4)">重命名</button>
+                    </div>
+                    <div class="save-slot" onclick="handleSaveSlot(5)">
+                        <div class="slot-num">存档位 5</div>
+                        <div class="slot-name" id="save-name-5">点击存档</div>
+                        <div class="slot-time" id="save-time-5"></div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSave(5)">删除</button>
+                        <button class="btn-rename" onclick="event.stopPropagation(); renameSave(5)">重命名</button>
+                    </div>
+                    <div class="save-slot" onclick="handleSaveSlot(6)">
+                        <div class="slot-num">存档位 6</div>
+                        <div class="slot-name" id="save-name-6">点击存档</div>
+                        <div class="slot-time" id="save-time-6"></div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSave(6)">删除</button>
+                        <button class="btn-rename" onclick="event.stopPropagation(); renameSave(6)">重命名</button>
+                    </div>
+                </div>
+                <button class="btn-close" onclick="closeModal()">关闭</button>
+            </div>
+        </div>
+
+        <div id="affection-modal" class="modal">
+            <div class="modal-content">
+                <h2>好感度</h2>
+                <div class="affection-list">
+                    <div class="affection-item">
+                        <div class="affection-char">萧若河</div>
+                        <div class="affection-bar-container">
+                            <div class="affection-bar" id="bar-xiao"></div>
+                        </div>
+                        <div class="affection-value" id="val-xiao">0</div>
+                    </div>
+                    <div class="affection-item">
+                        <div class="affection-char">谢玉衡</div>
+                        <div class="affection-bar-container">
+                            <div class="affection-bar" id="bar-xie"></div>
+                        </div>
+                        <div class="affection-value" id="val-xie">0</div>
+                    </div>
+                    <div class="affection-item">
+                        <div class="affection-char">李自清</div>
+                        <div class="affection-bar-container">
+                            <div class="affection-bar" id="bar-li"></div>
+                        </div>
+                        <div class="affection-value" id="val-li">0</div>
+                    </div>
+                    <div class="affection-item">
+                        <div class="affection-char">楚昭云</div>
+                        <div class="affection-bar-container">
+                            <div class="affection-bar" id="bar-chu"></div>
+                        </div>
+                        <div class="affection-value" id="val-chu">0</div>
+                    </div>
+                </div>
+                <button class="btn-close" onclick="closeModal()">关闭</button>
+            </div>
+        </div>
+
+        <div id="stats-modal" class="modal">
+            <div class="modal-content">
+                <h2>属性</h2>
+                <div id="stats-container" class="affection-list"></div>
+                <button class="btn-close" onclick="closeModal()">关闭</button>
+            </div>
+        </div>
+
+        <div id="ending-modal" class="modal">
+            <div class="modal-content ending-content">
+                <h2 id="ending-title"></h2>
+                <p id="ending-text"></p>
+                <button class="btn-restart" onclick="restartGame()">重新开始</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://chinesemusicworld.com/mp3lib/Dizi-Gada-Mairen-pass-Ga-Da-Mei-Lin.mp3" type="audio/mp3">
+        <source src="https://cdn.pixabay.com/audio/2022/05/27/audio_1c952a45c0.mp3" type="audio/mp3">
+        <source src="https://cdn.pixabay.com/audio/2022/11/07/audio_62c8d50c68.mp3" type="audio/mp3">
+    </audio>
+    
+    <script src="js/engine.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/affection.js"></script>
+    <script src="js/ai_story.js"></script>
+    <script src="js/data/story_prologue.js"></script>
+    <script src="js/data/story_main.js"></script>
+    <script src="js/data/story_xiao.js"></script>
+    <script src="js/data/story_xie.js"></script>
+    <script src="js/data/story_li.js"></script>
+    <script src="js/data/story_chu.js"></script>
+</body>
+</html>

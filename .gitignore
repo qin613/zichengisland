@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.vite/
+*.local
+.env
+.DS_Store
+.claude/
+.playwright-mcp/
+*.log

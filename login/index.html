@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自成岛 - 收藏每一段慢慢生长的自己</title>
+<style>
+/* ============================================
+   Reset & Variables - White Premium Theme
+   ============================================ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #faf9f7;
+  --cream: #f5f1ec;
+  --warm-white: #fefdfb;
+  --stone: #d5cec6;
+  --stone-dark: #b8b0a6;
+  --text: #3d3832;
+  --text-secondary: #787268;
+  --text-muted: #a8a098;
+  --accent: #c4a882;
+  --accent-light: #d4c0a0;
+  --accent-deep: #a08058;
+  --green: #7a9a6e;
+  --green-deep: #4a6a3e;
+  --ui-bg: rgba(255, 255, 255, 0.78);
+  --ui-border: rgba(200, 190, 175, 0.4);
+  --font: 'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,-apple-system,sans-serif;
+  --font-serif: 'Noto Serif SC','Source Han Serif SC','STSong','Songti SC',serif;
+}
+
+html, body { height:100%; overflow:hidden; }
+body {
+  font-family: var(--font);
+  background: linear-gradient(178deg, #fdfcfb 0%, #faf8f5 20%, #f7f3ee 50%, #f2ede6 80%, #ebe4da 100%);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   Background: minimal, white, soft light
+   ============================================ */
+.bg-light {
+  position:fixed; top:-15%; right:5%;
+  width:500px; height:500px;
+  background: radial-gradient(circle, rgba(220,210,195,0.2) 0%, rgba(230,220,205,0.08) 40%, transparent 70%);
+  border-radius:50%; pointer-events:none; z-index:0;
+}
+.bg-light2 {
+  position:fixed; bottom:-10%; left:-5%;
+  width:400px; height:400px;
+  background: radial-gradient(circle, rgba(210,200,185,0.15) 0%, rgba(220,210,195,0.05) 40%, transparent 70%);
+  border-radius:50%; pointer-events:none; z-index:0;
+}
+
+/* ============================================
+   Distant clouds - subtle
+   ============================================ */
+.clouds-distant { position:fixed; inset:0; z-index:1; pointer-events:none; }
+.dcloud {
+  position:absolute; border-radius:50%; filter:blur(30px);
+  background:rgba(255,255,255,0.5);
+  animation: dcloudDrift var(--dcd, 70s) linear infinite;
+}
+.dcloud:nth-child(1) { width:300px; height:60px; top:8%; left:-10%; --dcd:65s; }
+.dcloud:nth-child(2) { width:250px; height:50px; top:14%; left:55%; --dcd:55s; animation-delay:-20s; }
+.dcloud:nth-child(3) { width:280px; height:55px; top:5%; left:80%; --dcd:60s; animation-delay:-35s; }
+@keyframes dcloudDrift {
+  from { transform:translateX(0); }
+  to { transform:translateX(calc(110vw + 400px)); }
+}
+
+/* ============================================
+   3D Island Stage - perspective container
+   ============================================ */
+.island-stage-3d {
+  position:fixed; inset:0; z-index:5; pointer-events:none;
+  perspective: 1200px;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.island-rotate {
+  width:520px; height:520px;
+  transform-style: preserve-3d;
+  animation: islandRotate 12s ease-in-out infinite;
+  position:relative;
+}
+
+@keyframes islandRotate {
+  0%,100% { transform: rotateY(-6deg) rotateX(2deg); }
+  25% { transform: rotateY(3deg) rotateX(0deg); }
+  50% { transform: rotateY(6deg) rotateX(-1deg); }
+  75% { transform: rotateY(0deg) rotateX(1deg); }
+}
+
+/* Depth layers */
+.island-depth {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Back clouds */
+.island-depth.back { transform: translateZ(-60px); opacity:0.7; }
+/* Island */
+.island-depth.main { transform: translateZ(0); }
+/* Front clouds */
+.island-depth.front { transform: translateZ(40px); opacity:0.6; pointer-events:none; }
+
+/* Floating animation overlay */
+.island-float {
+  animation: islandFloat 5s ease-in-out infinite;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+@keyframes islandFloat {
+  0%,100% { transform:translateY(0); }
+  50% { transform:translateY(-15px); }
+}
+
+/* ============================================
+   Bottom cloud sea
+   ============================================ */
+.cloud-sea {
+  position:fixed; bottom:0; left:0; width:100%; height:22%; z-index:4; pointer-events:none;
+}
+.csea {
+  position:absolute; border-radius:50%; filter:blur(6px);
+  animation: cseaFloat var(--csf, 7s) ease-in-out infinite;
+}
+.csea:nth-child(1){ width:350px; height:90px; bottom:3%; left:-8%; --csf:7s; background:rgba(255,255,255,0.7); }
+.csea:nth-child(2){ width:400px; height:100px; bottom:1%; left:12%; --csf:8.5s; animation-delay:-2s; background:rgba(255,254,252,0.75); }
+.csea:nth-child(3){ width:320px; height:85px; bottom:2%; left:32%; --csf:7.5s; animation-delay:-4s; background:rgba(255,253,250,0.7); }
+.csea:nth-child(4){ width:380px; height:95px; bottom:0%; left:48%; --csf:9s; animation-delay:-1.5s; background:rgba(255,255,254,0.78); }
+.csea:nth-child(5){ width:360px; height:100px; bottom:2%; left:65%; --csf:8s; animation-delay:-3s; background:rgba(255,252,249,0.72); }
+.csea:nth-child(6){ width:340px; height:88px; bottom:4%; left:82%; --csf:7.8s; animation-delay:-5s; background:rgba(255,254,251,0.7); }
+.csea:nth-child(7){ width:300px; height:80px; bottom:1%; left:22%; --csf:6.5s; animation-delay:-1s; background:rgba(255,253,248,0.73); }
+@keyframes cseaFloat {
+  0%,100% { transform:translateY(0) scale(1); }
+  40% { transform:translateY(-8px) scale(1.03); }
+  60% { transform:translateY(-8px) scale(1.03); }
+}
+
+/* ============================================
+   Particles
+   ============================================ */
+#particleCanvas {
+  position:fixed; inset:0; z-index:6; pointer-events:none;
+}
+
+/* ============================================
+   Logo & Footer
+   ============================================ */
+.page-logo {
+  position:fixed; top:28px; left:36px; z-index:10; pointer-events:none;
+}
+.page-logo .logo-main {
+  font-family: var(--font-serif);
+  font-size:1.3rem; font-weight:600; letter-spacing:0.12em;
+  color: var(--text);
+  animation:logoIn 0.8s 0.1s ease both;
+}
+.page-logo .logo-en {
+  font-size:0.62rem; letter-spacing:0.14em;
+  color: var(--text-muted); margin-top:3px;
+  animation:logoIn 0.8s 0.2s ease both;
+}
+@keyframes logoIn {
+  from { opacity:0; transform:translateY(-6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.page-footer {
+  position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+  z-index:10; font-size:0.62rem; color:var(--text-muted);
+  letter-spacing:0.06em; pointer-events:none;
+  animation:logoIn 0.8s 0.5s ease both;
+}
+
+/* ============================================
+   Login Card
+   ============================================ */
+.overlay {
+  position:fixed; inset:0; z-index:10;
+  display:flex; align-items:center; justify-content:flex-end;
+  padding-right: max(5vw, 30px);
+  pointer-events:none;
+}
+
+.login-card {
+  pointer-events:auto;
+  width:380px;
+  background: var(--ui-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border:1px solid var(--ui-border);
+  border-radius:16px;
+  padding:36px 32px 30px;
+  box-shadow:
+    0 2px 24px rgba(0,0,0,0.04),
+    0 0 0 1px rgba(255,255,255,0.5) inset;
+  animation: cardIn 0.8s 0.15s cubic-bezier(0.22,0.61,0.36,1) both;
+}
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* Card accent line */
+.login-card::before {
+  content:''; position:absolute; top:0; left:24px; right:24px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0.5;
+}
+
+.quest-tag {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:0.66rem; letter-spacing:0.12em; color:var(--accent-deep);
+  margin-bottom:10px;
+}
+.quest-tag .tag-line {
+  width:16px; height:1px; background:var(--accent); opacity:0.6;
+}
+
+.quest-title {
+  font-family: var(--font-serif);
+  font-size:1.5rem; font-weight:500; letter-spacing:0.06em;
+  color:var(--text); margin-bottom:3px;
+}
+.quest-subtitle {
+  font-size:0.74rem; color:var(--text-secondary); letter-spacing:0.04em;
+}
+
+/* Progress */
+.progress-row {
+  display:flex; align-items:center; justify-content:center; gap:0;
+  margin:24px 0;
+}
+.progress-node { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.pdot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--stone);
+  transition:all 0.5s ease;
+}
+.pdot.done { background:var(--accent); }
+.pdot.current { background:var(--accent-light); box-shadow:0 0 10px rgba(180,150,120,0.4); animation:pdotPulse 2.5s infinite; }
+@keyframes pdotPulse {
+  0%,100% { box-shadow:0 0 4px rgba(180,150,120,0.25); }
+  50% { box-shadow:0 0 14px rgba(180,150,120,0.5); }
+}
+.plabel { font-size:0.56rem; color:var(--text-muted); letter-spacing:0.04em; white-space:nowrap; }
+.plabel.active { color:var(--accent-deep); }
+.pline { width:40px; height:1px; background:var(--stone); margin:0 2px 16px; }
+.pline.done { background:var(--accent); opacity:0.6; }
+
+/* Tabs */
+.login-tabs {
+  display:flex; gap:0; margin-bottom:22px;
+  border-bottom:1px solid rgba(200,190,175,0.3);
+}
+.login-tab {
+  flex:1; text-align:center; padding:10px 0;
+  font-size:0.78rem; color:var(--text-secondary); cursor:pointer;
+  background:none; border:none; position:relative;
+  letter-spacing:0.05em; font-family:var(--font);
+  transition:color 0.3s;
+}
+.login-tab.active { color:var(--text); font-weight:500; }
+.login-tab.active::after {
+  content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
+  width:40px; height:2px; border-radius:1px;
+  background:var(--accent);
+}
+
+/* Forms */
+.form-section { display:none; }
+.form-section.active { display:block; animation:secIn 0.3s ease; }
+@keyframes secIn {
+  from { opacity:0; transform:translateY(6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.input-group {
+  position:relative; margin-bottom:14px;
+  transition:transform 0.25s ease;
+}
+.input-group:hover { transform:translateY(-1px); }
+
+.input-icon {
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  width:15px; height:15px; opacity:0.28; pointer-events:none;
+  transition:opacity 0.3s; color:var(--accent-deep);
+}
+.input-group:focus-within .input-icon { opacity:0.5; }
+
+.form-input {
+  width:100%; height:46px;
+  padding:0 12px 0 40px;
+  border:1px solid rgba(200,190,175,0.45);
+  border-radius:8px;
+  background:rgba(255,255,255,0.65);
+  font-size:0.84rem; font-family:var(--font);
+  color:var(--text); letter-spacing:0.04em;
+  outline:none; transition:all 0.3s ease;
+}
+.form-input::placeholder { color:rgba(170,160,148,0.5); }
+.form-input:focus {
+  border-color:rgba(180,150,120,0.5);
+  box-shadow:0 0 0 3px rgba(200,170,140,0.08);
+  background:rgba(255,255,255,0.9);
+}
+
+.sms-row { display:flex; gap:8px; }
+.sms-row .input-group { flex:1; }
+.sms-row .form-input { padding-left:12px; }
+
+.sms-btn {
+  flex-shrink:0; height:46px; padding:0 14px;
+  border:1px solid rgba(200,180,160,0.35);
+  border-radius:8px;
+  background:rgba(250,245,238,0.7);
+  color:var(--accent-deep); font-size:0.72rem;
+  cursor:pointer; font-family:var(--font); letter-spacing:0.04em;
+  transition:all 0.3s; white-space:nowrap;
+}
+.sms-btn:hover { background:rgba(240,230,215,0.8); border-color:rgba(180,150,120,0.5); }
+.sms-btn.counting { color:var(--text-muted); border-color:rgba(200,190,175,0.2); pointer-events:none; }
+
+.submit-btn {
+  width:100%; height:48px; border:none; border-radius:8px;
+  background:linear-gradient(135deg, #b89870 0%, #c8ad85 40%, #d4bf9a 70%, #c8ad85 100%);
+  background-size:200% 100%;
+  color:#fff; font-size:0.88rem; font-weight:500;
+  font-family:var(--font); letter-spacing:0.1em;
+  cursor:pointer; position:relative; overflow:hidden;
+  transition:all 0.4s ease;
+  margin-top:6px;
+}
+.submit-btn:hover {
+  background-position:100% 0;
+  box-shadow:0 6px 24px rgba(170,140,110,0.3);
+  transform:translateY(-1px);
+}
+.submit-btn:active { transform:scale(0.98); }
+.submit-btn.loading { pointer-events:none; opacity:0.7; }
+.submit-btn .btn-text { transition:opacity 0.3s; }
+.submit-btn .btn-loader { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.3s; }
+.submit-btn.loading .btn-text { opacity:0; }
+.submit-btn.loading .btn-loader { opacity:1; }
+
+.dot-spinner {
+  width:18px; height:18px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.form-footer {
+  display:flex; justify-content:center; align-items:center; gap:16px;
+  margin-top:18px; font-size:0.72rem;
+}
+.form-footer a {
+  color:var(--text-secondary); text-decoration:none; letter-spacing:0.04em;
+  cursor:pointer; transition:color 0.3s;
+}
+.form-footer a:hover { color:var(--accent-deep); }
+.form-footer .divider { width:1px; height:9px; background:rgba(200,190,175,0.35); }
+
+/* Toast */
+.toast {
+  position:fixed; top:26px; left:50%; transform:translateX(-50%) translateY(-120px);
+  z-index:999; padding:11px 26px; border-radius:20px;
+  background:rgba(60,52,44,0.9); backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#f5f0e8; font-size:0.76rem; letter-spacing:0.05em;
+  pointer-events:none; font-family:var(--font);
+  transition:transform 0.4s cubic-bezier(0.22,0.61,0.36,1);
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 900px) {
+  .island-stage-3d { align-items:flex-end; padding-bottom:15%; }
+  .island-rotate { width:380px; height:380px; }
+  .island-rotate svg { width:380px; height:380px; }
+
+  .overlay { justify-content:center; align-items:flex-end; padding-right:0; padding-bottom:4%; }
+  .login-card { width:90vw; max-width:360px; padding:28px 22px 24px; }
+  .quest-title { font-size:1.3rem; }
+}
+
+@media (max-width: 520px) {
+  .island-rotate { width:280px; height:280px; }
+  .island-rotate svg { width:280px; height:280px; }
+  .page-logo { top:12px; left:14px; }
+  .page-logo .logo-main { font-size:1rem; }
+  .overlay { padding-bottom:8%; }
+  .login-card { width:95vw; padding:22px 16px 20px; }
+  .quest-title { font-size:1.15rem; }
+  .pline { width:22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Soft light orbs -->
+<div class="bg-light"></div>
+<div class="bg-light2"></div>
+
+<!-- Distant clouds -->
+<div class="clouds-distant">
+  <div class="dcloud"></div>
+  <div class="dcloud"></div>
+  <div class="dcloud"></div>
+</div>
+
+<!-- Cloud sea -->
+<div class="cloud-sea">
+  <div class="csea"></div><div class="csea"></div><div class="csea"></div>
+  <div class="csea"></div><div class="csea"></div><div class="csea"></div>
+  <div class="csea"></div>
+</div>
+
+<!-- ============================================
+     3D ROTATING ISLAND
+     ============================================ -->
+<div class="island-stage-3d">
+  <div class="island-rotate">
+
+    <!-- Back depth: clouds behind island -->
+    <div class="island-depth back">
+      <svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="120" rx="90" ry="30" fill="rgba(240,235,228,0.5)" filter="blur(4px)"/>
+        <ellipse cx="220" cy="100" rx="80" ry="25" fill="rgba(245,240,235,0.45)" filter="blur(4px)"/>
+      </svg>
+    </div>
+
+    <!-- Main depth: the island -->
+    <div class="island-depth main">
+      <div class="island-float">
+        <svg width="520" height="520" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="rockB" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#b0a090"/>
+              <stop offset="40%" stop-color="#8b7d6e"/>
+              <stop offset="100%" stop-color="#5e5245"/>
+            </linearGradient>
+            <linearGradient id="rockM" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c4b8a8"/>
+              <stop offset="100%" stop-color="#9b8e7e"/>
+            </linearGradient>
+            <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a8c498"/>
+              <stop offset="100%" stop-color="#6d8e5e"/>
+            </linearGradient>
+            <linearGradient id="grassL" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#b0caa0"/>
+              <stop offset="100%" stop-color="#7d9870"/>
+            </linearGradient>
+            <linearGradient id="treeG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7da868"/>
+              <stop offset="100%" stop-color="#3d5e2e"/>
+            </linearGradient>
+            <linearGradient id="treeG2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6d9858"/>
+              <stop offset="100%" stop-color="#2d4e1e"/>
+            </linearGradient>
+            <linearGradient id="treeP" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c8a8b0"/>
+              <stop offset="100%" stop-color="#a87888"/>
+            </linearGradient>
+            <linearGradient id="hut" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f2e8d8"/>
+              <stop offset="100%" stop-color="#d8c8b0"/>
+            </linearGradient>
+            <radialGradient id="win" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(255,210,150,0.7)"/>
+              <stop offset="100%" stop-color="rgba(255,190,120,0.15)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Shadow on cloud sea -->
+          <ellipse cx="260" cy="462" rx="190" ry="28" fill="rgba(180,170,155,0.2)">
+            <animate attributeName="rx" values="190;198;190" dur="5s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- Rock base -->
+          <ellipse cx="260" cy="435" rx="160" ry="34" fill="url(#rockB)" opacity="0.75"/>
+
+          <!-- Mid rock -->
+          <ellipse cx="260" cy="415" rx="140" ry="28" fill="url(#rockM)" opacity="0.7"/>
+
+          <!-- Soil layer -->
+          <ellipse cx="260" cy="398" rx="125" ry="20" fill="#8b7860" opacity="0.5"/>
+
+          <!-- Grass surface -->
+          <ellipse cx="260" cy="382" rx="120" ry="22" fill="url(#grass)" opacity="0.88"/>
+
+          <!-- Grass highlight patches -->
+          <ellipse cx="235" cy="378" rx="40" ry="7" fill="url(#grassL)" opacity="0.55"/>
+          <ellipse cx="285" cy="375" rx="35" ry="6" fill="url(#grassL)" opacity="0.5"/>
+          <ellipse cx="260" cy="372" rx="45" ry="8" fill="#b0c8a0" opacity="0.45"/>
+
+          <!-- ===== Trees ===== -->
+          <!-- Far left tree -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 105 380;1.5 105 380;0 105 380;-1 105 380;0 105 380" dur="5s" repeatCount="indefinite"/>
+            <rect x="101" y="358" width="8" height="26" rx="3" fill="#7a5e48" opacity="0.7"/>
+            <ellipse cx="105" cy="318" rx="36" ry="44" fill="url(#treeG)" opacity="0.88"/>
+            <ellipse cx="98" cy="308" rx="30" ry="36" fill="url(#treeG)" opacity="0.72"/>
+            <ellipse cx="112" cy="300" rx="26" ry="30" fill="url(#treeG)" opacity="0.55"/>
+            <!-- Leaf detail dots -->
+            <circle cx="80" cy="298" r="3" fill="rgba(160,200,140,0.4)">
+              <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="128" cy="290" r="2.5" fill="rgba(160,200,140,0.35)">
+              <animate attributeName="opacity" values="0.15;0.45;0.15" dur="3.5s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+
+          <!-- Far right tree -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 395 375;-1.2 395 375;0 395 375;1 395 375;0 395 375" dur="5.5s" repeatCount="indefinite"/>
+            <rect x="391" y="354" width="8" height="26" rx="3" fill="#7a5e48" opacity="0.7"/>
+            <ellipse cx="395" cy="314" rx="34" ry="42" fill="url(#treeG2)" opacity="0.85"/>
+            <ellipse cx="388" cy="304" rx="28" ry="34" fill="url(#treeG2)" opacity="0.68"/>
+            <ellipse cx="402" cy="296" rx="24" ry="28" fill="url(#treeG2)" opacity="0.5"/>
+            <circle cx="420" cy="296" r="2.5" fill="rgba(140,180,120,0.35)">
+              <animate attributeName="opacity" values="0.15;0.45;0.15" dur="3.2s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+
+          <!-- Center-left tree -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 170 385;0.8 170 385;0 170 385;-1.5 170 385;0 170 385" dur="4.5s" repeatCount="indefinite"/>
+            <rect x="166" y="360" width="8" height="28" rx="3" fill="#7a5e48" opacity="0.7"/>
+            <ellipse cx="170" cy="325" rx="30" ry="38" fill="url(#treeG)" opacity="0.86"/>
+            <ellipse cx="164" cy="316" rx="24" ry="30" fill="url(#treeG)" opacity="0.68"/>
+            <ellipse cx="176" cy="308" rx="20" ry="24" fill="url(#treeG)" opacity="0.5"/>
+          </g>
+
+          <!-- Pink/blossom tree (accent) -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 340 378;-0.8 340 378;0 340 378;1.2 340 378;0 340 378" dur="4.8s" repeatCount="indefinite"/>
+            <rect x="335" y="356" width="8" height="26" rx="3" fill="#8b6e58" opacity="0.65"/>
+            <ellipse cx="339" cy="320" rx="28" ry="36" fill="url(#treeP)" opacity="0.8"/>
+            <ellipse cx="333" cy="312" rx="22" ry="28" fill="url(#treeP)" opacity="0.65"/>
+            <circle cx="325" cy="300" r="2.5" fill="rgba(230,190,200,0.45)">
+              <animate attributeName="opacity" values="0.2;0.55;0.2" dur="2.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="352" cy="298" r="2" fill="rgba(230,190,200,0.4)">
+              <animate attributeName="opacity" values="0.15;0.5;0.15" dur="3.4s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+
+          <!-- Center tree (tallest) -->
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 260 385;1 260 385;0 260 385;-0.8 260 385;0 260 385" dur="4s" repeatCount="indefinite"/>
+            <rect x="256" y="350" width="8" height="36" rx="3" fill="#7a5e48" opacity="0.72"/>
+            <ellipse cx="260" cy="308" rx="32" ry="44" fill="url(#treeG2)" opacity="0.87"/>
+            <ellipse cx="254" cy="298" rx="26" ry="35" fill="url(#treeG2)" opacity="0.7"/>
+            <ellipse cx="266" cy="290" rx="22" ry="28" fill="url(#treeG2)" opacity="0.52"/>
+          </g>
+
+          <!-- ===== House / Hut ===== -->
+          <rect x="195" y="390" width="44" height="32" rx="3" fill="url(#hut)" opacity="0.8"/>
+          <!-- Roof -->
+          <polygon points="188,392 217,355 246,392" fill="#b88868" opacity="0.7"/>
+          <!-- Window -->
+          <rect x="204" y="400" width="10" height="10" rx="2" fill="url(#win)">
+            <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3.5s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Door -->
+          <rect x="226" y="406" width="8" height="16" rx="2" fill="#7a5038" opacity="0.6"/>
+
+          <!-- ===== Small dock ===== -->
+          <rect x="300" y="408" width="55" height="4" rx="2" fill="#c8b898" opacity="0.55"/>
+          <rect x="304" y="410" width="4" height="10" fill="#a89070" opacity="0.4"/>
+          <rect x="348" y="410" width="4" height="10" fill="#a89070" opacity="0.4"/>
+
+          <!-- Lantern -->
+          <line x1="325" y1="404" x2="325" y2="392" stroke="#5a3a28" stroke-width="1.5" opacity="0.55"/>
+          <ellipse cx="325" cy="389" rx="5" ry="6" fill="rgba(255,195,130,0.5)">
+            <animate attributeName="opacity" values="0.35;0.65;0.35" dur="2.2s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- ===== Fence ===== -->
+          <line x1="170" y1="396" x2="195" y2="396" stroke="#b89878" stroke-width="2" opacity="0.4"/>
+          <line x1="174" y1="396" x2="174" y2="388" stroke="#b89878" stroke-width="1.5" opacity="0.4"/>
+          <line x1="184" y1="396" x2="184" y2="388" stroke="#b89878" stroke-width="1.5" opacity="0.4"/>
+
+          <!-- ===== Rock details on island body ===== -->
+          <ellipse cx="190" cy="425" rx="18" ry="8" fill="rgba(140,125,108,0.35)"/>
+          <ellipse cx="330" cy="420" rx="14" ry="6" fill="rgba(140,125,108,0.3)"/>
+
+          <!-- ===== Waterfall ===== -->
+          <ellipse cx="148" cy="398" rx="10" ry="6" fill="#a09078" opacity="0.5"/>
+          <!-- Waterfall stream -->
+          <rect x="144" y="396" width="5" height="40" rx="2" fill="rgba(180,200,215,0.4)" opacity="0.6">
+            <animate attributeName="opacity" values="0.45;0.7;0.45" dur="0.8s" repeatCount="indefinite"/>
+          </rect>
+          <ellipse cx="146" cy="438" rx="10" ry="4" fill="rgba(190,210,225,0.25)" opacity="0.4">
+            <animate attributeName="opacity" values="0.2;0.45;0.2" dur="1.5s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- Beach sparkles -->
+          <circle cx="215" cy="395" r="1.5" fill="rgba(255,250,240,0.5)">
+            <animate attributeName="opacity" values="0.2;0.55;0.2" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="310" cy="390" r="1.2" fill="rgba(255,250,240,0.45)">
+            <animate attributeName="opacity" values="0.15;0.5;0.15" dur="3s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Tiny flowers on grass -->
+          <circle cx="230" cy="378" r="1.3" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="275" cy="376" r="1" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="295" cy="380" r="1.2" fill="rgba(255,255,255,0.5)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Front depth: clouds in front -->
+    <div class="island-depth front">
+      <svg width="280" height="160" viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="80" cy="100" rx="70" ry="22" fill="rgba(255,255,255,0.4)" filter="blur(3px)"/>
+        <ellipse cx="180" cy="115" rx="60" ry="20" fill="rgba(255,255,255,0.35)" filter="blur(3px)"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<!-- Particles -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- Logo -->
+<div class="page-logo">
+  <div class="logo-main">自成岛</div>
+  <div class="logo-en">ZICHENG ISLAND</div>
+</div>
+
+<!-- ============================================
+     LOGIN CARD
+     ============================================ -->
+<div class="overlay">
+  <div class="login-card">
+    <div class="quest-tag">
+      <span class="tag-line"></span>新的旅程<span class="tag-line"></span>
+    </div>
+    <div class="quest-title">登岛 · 开始探索</div>
+    <div class="quest-subtitle">在自成岛，收藏每一段慢慢生长的自己</div>
+
+    <div class="progress-row">
+      <div class="progress-node">
+        <span class="pdot done"></span>
+        <span class="plabel">发现岛屿</span>
+      </div>
+      <span class="pline done"></span>
+      <div class="progress-node">
+        <span class="pdot current"></span>
+        <span class="plabel active">登入岛屿</span>
+      </div>
+      <span class="pline"></span>
+      <div class="progress-node">
+        <span class="pdot"></span>
+        <span class="plabel">探索成长</span>
+      </div>
+    </div>
+
+    <div class="login-tabs">
+      <button class="login-tab active" data-tab="password">密码登录</button>
+      <button class="login-tab" data-tab="sms">验证码登录</button>
+    </div>
+
+    <div class="form-section active" id="section-password">
+      <div class="input-group">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <input type="tel" class="form-input" id="phoneInput" placeholder="手机号" maxlength="11" autocomplete="tel">
+      </div>
+      <div class="input-group">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1.5"/>
+        </svg>
+        <input type="password" class="form-input" id="passInput" placeholder="密码" autocomplete="current-password">
+      </div>
+      <button class="submit-btn" id="submitPassword">
+        <span class="btn-text">开 始 探 索</span>
+        <span class="btn-loader"><span class="dot-spinner"></span></span>
+      </button>
+    </div>
+
+    <div class="form-section" id="section-sms">
+      <div class="input-group">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <input type="tel" class="form-input" id="phoneInputSms" placeholder="手机号" maxlength="11" autocomplete="tel">
+      </div>
+      <div class="sms-row">
+        <div class="input-group">
+          <input type="text" class="form-input" id="codeInput" placeholder="验证码" maxlength="6" autocomplete="off">
+        </div>
+        <button class="sms-btn" id="sendCodeBtn">获取验证码</button>
+      </div>
+      <button class="submit-btn" id="submitSms">
+        <span class="btn-text">开 始 探 索</span>
+        <span class="btn-loader"><span class="dot-spinner"></span></span>
+      </button>
+    </div>
+
+    <div class="form-footer">
+      <a id="registerLink">注册账号</a>
+      <span class="divider"></span>
+      <a id="forgotLink">忘记密码</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">© 2026 自成岛 · 收藏每一段慢慢生长的自己</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---- Particles ---- */
+(function(){
+  const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+  let ps=[];
+  function rs(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+  function sp(n){
+    ps=[];
+    for(let i=0;i<n;i++) ps.push({
+      x:Math.random()*c.width,y:Math.random()*c.height,
+      r:Math.random()*1.6+0.4,vx:(Math.random()-0.5)*0.25,
+      vy:-Math.random()*0.4-0.12,life:Math.random(),
+      max:Math.random()*0.5+0.35
+    });
+  }
+  rs();sp(50);
+  function dr(ts){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(let i=ps.length-1;i>=0;i--){
+      const p=ps[i];p.life+=0.016;
+      if(p.life>p.max){
+        ps.splice(i,1);
+        ps.push({x:Math.random()*c.width,y:c.height*0.78+Math.random()*c.height*0.22,r:Math.random()*1.6+0.4,vx:(Math.random()-0.5)*0.25,vy:-Math.random()*0.4-0.12,life:0,max:Math.random()*0.5+0.35});
+        continue;
+      }
+      p.x+=p.vx;p.y+=p.vy;
+      const pr=p.life/p.max;
+      const alpha=pr<0.1?pr/0.1:pr>0.68?(1-pr)/0.32:1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(220,210,195,${alpha*0.45})`;
+      ctx.fill();
+      if(p.r>1.1&&alpha>0.35){
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r*2.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(210,200,185,${alpha*0.08})`;
+        ctx.fill();
+      }
+    }
+    while(ps.length<50) ps.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.6+0.4,vx:(Math.random()-0.5)*0.25,vy:-Math.random()*0.4-0.12,life:Math.random()*0.5,max:Math.random()*0.5+0.35});
+    requestAnimationFrame(dr);
+  }
+  requestAnimationFrame(dr);
+  window.addEventListener('resize',()=>{rs();});
+})();
+
+/* ---- Login ---- */
+(function(){
+  const tabs=document.querySelectorAll('.login-tab');
+  const secPw=document.getElementById('section-password');
+  const secSms=document.getElementById('section-sms');
+  const phone=document.getElementById('phoneInput');
+  const pass=document.getElementById('passInput');
+  const btnPw=document.getElementById('submitPassword');
+  const phoneSms=document.getElementById('phoneInputSms');
+  const code=document.getElementById('codeInput');
+  const sendBtn=document.getElementById('sendCodeBtn');
+  const btnSms=document.getElementById('submitSms');
+  const toast=document.getElementById('toast');
+
+  let timer=null,secs=0;
+
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    const tg=t.dataset.tab;
+    secPw.classList.toggle('active',tg==='password');
+    secSms.classList.toggle('active',tg==='sms');
+    updateProgress();
+  }));
+
+  let tt;
+  function toastMsg(msg){
+    clearTimeout(tt);
+    toast.textContent=msg;
+    toast.classList.add('show');
+    tt=setTimeout(()=>toast.classList.remove('show'),2400);
+  }
+
+  function vPhone(p){ return /^1[3-9]\d{9}$/.test(p); }
+  function setLoading(btn,on){
+    if(on){btn.classList.add('loading');btn.disabled=true;}
+    else{btn.classList.remove('loading');btn.disabled=false;}
+  }
+
+  btnPw.addEventListener('click',()=>{
+    const p=phone.value.trim(),pw=pass.value.trim();
+    if(!p) return toastMsg('请输入手机号');
+    if(!vPhone(p)) return toastMsg('请输入正确的手机号');
+    if(!pw) return toastMsg('请输入密码');
+    if(pw.length<6) return toastMsg('密码至少6位');
+    setLoading(btnPw,true);
+    setTimeout(()=>{setLoading(btnPw,false);toastMsg('探索之门已开启，欢迎回到自成岛');},1500);
+  });
+
+  sendBtn.addEventListener('click',()=>{
+    const p=phoneSms.value.trim();
+    if(!p) return toastMsg('请先输入手机号');
+    if(!vPhone(p)) return toastMsg('请输入正确的手机号');
+    if(timer) return;
+    secs=60;sendBtn.classList.add('counting');sendBtn.textContent=`${secs}s`;
+    timer=setInterval(()=>{
+      secs--;
+      if(secs<=0){clearInterval(timer);timer=null;sendBtn.classList.remove('counting');sendBtn.textContent='获取验证码';}
+      else sendBtn.textContent=`${secs}s`;
+    },1000);
+    toastMsg('验证码已发送');
+  });
+
+  btnSms.addEventListener('click',()=>{
+    const p=phoneSms.value.trim(),cd=code.value.trim();
+    if(!p) return toastMsg('请输入手机号');
+    if(!vPhone(p)) return toastMsg('请输入正确的手机号');
+    if(!cd) return toastMsg('请输入验证码');
+    if(cd.length<4) return toastMsg('验证码格式错误');
+    setLoading(btnSms,true);
+    setTimeout(()=>{setLoading(btnSms,false);toastMsg('探索之门已开启，欢迎回到自成岛');},1500);
+  });
+
+  document.getElementById('registerLink').addEventListener('click',()=>toastMsg('注册功能即将开放'));
+  document.getElementById('forgotLink').addEventListener('click',()=>toastMsg('找回密码功能即将开放'));
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      if(secPw.classList.contains('active')) btnPw.click();
+      else if(secSms.classList.contains('active')) btnSms.click();
+    }
+  });
+
+  function updateProgress(){
+    const dots=document.querySelectorAll('.pdot');
+    const labels=document.querySelectorAll('.plabel');
+    const lines=document.querySelectorAll('.pline');
+    const isPw=secPw.classList.contains('active');
+    const ph=isPw?phone.value.trim():phoneSms.value.trim();
+    const pwcd=isPw?pass.value.trim():code.value.trim();
+    let lv=0;
+    if(vPhone(ph)) lv=1;
+    if(lv===1&&pwcd.length>=(isPw?6:4)) lv=2;
+    dots.forEach((d,i)=>{
+      d.classList.remove('done','current');
+      if(i<lv) d.classList.add('done');
+      else if(i===lv) d.classList.add('current');
+    });
+    labels.forEach((l,i)=>l.classList.toggle('active',i===lv));
+    lines.forEach((l,i)=>l.classList.toggle('done',i<lv));
+  }
+
+  [phone,pass,phoneSms,code].forEach(el=>el.addEventListener('input',updateProgress));
+})();
+</script>
+</body>
+</html>

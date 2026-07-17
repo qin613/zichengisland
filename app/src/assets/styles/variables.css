@@ -1,0 +1,89 @@
+/* ===== 自成岛 设计变量 · 暖白治愈主题 ===== */
+:root {
+  /* 主题强调色 */
+  --color-primary: #d4a373;       /* 暖沙金 */
+  --color-primary-light: #e8c9a0;
+  --color-accent: #c97d5e;        /* 陶土红 */
+  --color-accent-2: #b8a08a;      /* 暖灰褐 */
+  --color-warm: #d45d5d;          /* 温朱红 */
+  --color-gold: #e8d44d;          /* 柔和金 */
+
+  /* 文字色（暖白模式） */
+  --text-primary: #2d2a26;
+  --text-secondary: rgba(80, 70, 60, 0.7);
+  --text-muted: rgba(120, 110, 100, 0.5);
+
+  /* 背景色阶 */
+  --space-deepest: #f5f0eb;
+  --space-deep: #f8f6f3;
+  --space-mid: #f0ece6;
+  --space-glow: #e8e0d8;
+
+  /* 玻璃拟态核心变量 */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-bg-soft: rgba(255, 255, 255, 0.4);
+  --glass-bg-active: rgba(212, 163, 115, 0.12);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-border-soft: rgba(0, 0, 0, 0.04);
+  --glass-blur: 14px;
+  --glass-blur-strong: 20px;
+
+  /* 阴影 */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(212, 163, 115, 0.15);
+
+  /* 圆角 */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* 间距 */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* 字号 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+
+  /* 过渡 */
+  --transition-fast: 0.15s ease;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 暖光发光特效 */
+  --glow-primary: 0 0 20px rgba(212, 163, 115, 0.15);
+  --glow-accent: 0 0 16px rgba(201, 125, 94, 0.12);
+  --glow-warm: 0 0 16px rgba(212, 93, 93, 0.1);
+
+  /* 卡片悬浮 */
+  --card-hover-transform: translateY(-5px);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+  /* 导航栏 */
+  --nav-active-gradient: linear-gradient(135deg, rgba(212, 163, 115, 0.2), rgba(232, 201, 160, 0.08));
+  --nav-active-shadow: none;
+  --nav-hover-bg: rgba(0, 0, 0, 0.04);
+
+  /* 大图遮罩 */
+  --photo-overlay-gradient: linear-gradient(to top,
+    rgba(245, 240, 235, 0.92) 0%,
+    rgba(245, 240, 235, 0.5) 40%,
+    rgba(212, 163, 115, 0.04) 65%,
+    transparent 100%
+  );
+}

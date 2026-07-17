@@ -1,0 +1,312 @@
+import docx
+from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+doc = docx.Document('D:/嫣落尘渊/孙若妍生产实习报告.docx')
+
+def set_para(para, text, bold=False, size=None, align=None):
+    para.text = text
+    for run in para.runs:
+        run.bold = bold
+        if size:
+            run.font.size = Pt(size)
+    if align:
+        para.alignment = align
+
+def add_code_block(doc, code_lines, file_ref):
+    doc.add_paragraph(f"（代码位置：{file_ref}）")
+    doc.add_paragraph("```javascript")
+    for line in code_lines:
+        doc.add_paragraph(line)
+    doc.add_paragraph("```")
+
+def add_bold_paragraph(doc, text):
+    para = doc.add_paragraph(text)
+    for run in para.runs:
+        run.bold = True
+    return para
+
+# ===== 封面信息 =====
+set_para(doc.paragraphs[4], "设计题目：《嫣落尘渊》古风穿越乙女文字剧情游戏")
+set_para(doc.paragraphs[5], "班   级：")
+set_para(doc.paragraphs[6], "学   号：")
+set_para(doc.paragraphs[7], "姓   名：孙若妍")
+set_para(doc.paragraphs[8], "指导教师：")
+set_para(doc.paragraphs[9], "完成日期：       2026.7.18")
+set_para(doc.paragraphs[12], "《嫣落尘渊》古风穿越乙女文字剧情游戏")
+set_para(doc.paragraphs[14], "孙若妍    2026年7月18日")
+
+# ===== 摘要 =====
+set_para(doc.paragraphs[19], "摘要", bold=True)
+set_para(doc.paragraphs[20], "随着互联网技术的飞速发展，文字冒险游戏（AVG）凭借其独特的叙事体验和互动性，逐渐成为游戏市场中备受瞩目的细分领域。特别是古风穿越题材，结合了传统文化元素与现代审美，深受年轻玩家群体喜爱。然而，传统文字游戏往往存在剧情线性化、互动方式单一、角色立绘展示不够灵活等问题，难以满足玩家对沉浸式体验的追求。")
+set_para(doc.paragraphs[21], "本文聚焦《嫣落尘渊》古风穿越乙女文字剧情游戏的开发与实现。该游戏以古风架空王朝为背景，玩家扮演从21世纪穿越而来的特工女主，在古代开启一段权谋与情感交织的传奇故事。游戏系统基于HTML5、CSS3和JavaScript技术构建，采用模块化架构设计，集成了动态剧情生成、角色立绘展示、多分支选择、好感度系统、属性养成等核心功能，旨在打造一个交互丰富、视觉精美的沉浸式叙事体验平台。")
+set_para(doc.paragraphs[22], "系统设计目标明确：通过精美的古风UI界面、流畅的交互逻辑和多样化的剧情分支，为玩家提供身临其境的游戏体验。核心功能包括：玩家自定义姓名、四位可攻略男主独立好感度系统、多分支剧情选择、AI动态剧情生成、场景切换、自动存档读档、属性数值系统等。整体设计采用组件化思想，各模块独立运转又协同配合，确保游戏流程顺畅。")
+set_para(doc.paragraphs[23], "在具体实现中，界面层利用HTML5构建语义化结构，CSS3负责古风视觉呈现，JavaScript处理游戏逻辑与交互；角色立绘采用透明PNG格式，通过CSS定位技术实现多层次展示；剧情数据以JSON格式存储，支持动态加载；存档功能基于localStorage实现本地持久化存储。最后，通过针对性测试验证了系统功能完整性、界面适配性与运行稳定性。")
+set_para(doc.paragraphs[25], "关键词：文字冒险游戏；古风穿越；乙女游戏；HTML5；JavaScript；AI动态剧情")
+
+# ===== 序言 =====
+set_para(doc.paragraphs[27], "序言", bold=True)
+set_para(doc.paragraphs[28], "    近年来，随着数字娱乐产业的蓬勃发展，文字冒险游戏作为一种独特的叙事艺术形式，正逐渐从小众走向大众。古风穿越题材凭借其独特的文化魅力和浪漫情怀，成为众多玩家追捧的热门方向。然而，传统文字游戏在交互方式、视觉呈现和剧情自由度等方面存在明显局限，难以满足当代玩家对沉浸式体验的更高追求。")
+set_para(doc.paragraphs[29], "本次实验紧紧围绕《嫣落尘渊》古风穿越乙女文字剧情游戏的开发实践展开，核心目标在于通过真实场景的开发实操，深入理解并灵活运用Web前端技术栈（HTML5、CSS3、JavaScript）构建完整的游戏系统，掌握游戏开发中的核心技术要点，包括场景管理、角色渲染、对话系统、存档机制等。")
+set_para(doc.paragraphs[30], "实验以古风穿越乙女游戏的典型交互场景为实践载体，具体涵盖三大核心模块：游戏界面设计（包括古风卷轴界面、对话框、立绘展示区）、剧情系统实现（分支选择、AI动态生成）、数据管理系统（存档读档、好感度属性）。通过系统训练，逐步构建完整的游戏交互流程，最终实现对Web游戏开发规范与问题解决方法的全面掌握，为后续开发更复杂的游戏应用奠定坚实基础。")
+
+# ===== 1 需求分析 =====
+set_para(doc.paragraphs[62], "1 需求分析", bold=True)
+set_para(doc.paragraphs[63], "1.1 问题描述", bold=True)
+set_para(doc.paragraphs[64], "在当代娱乐市场中，文字冒险游戏以其独特的叙事体验受到广大玩家喜爱，尤其是古风穿越乙女题材，融合了传统文化、浪漫情感与权谋斗争，具有广泛的受众基础。然而，现有文字游戏普遍存在以下问题：剧情线性化严重，玩家选择对剧情走向影响有限；角色立绘展示不够灵活，难以根据剧情需要动态切换位置和表情；交互方式单一，缺乏AI驱动的动态剧情生成能力；存档系统功能简陋，无法满足玩家多存档位、自定义存档名的需求。")
+set_para(doc.paragraphs[65], "1.2 需求分析", bold=True)
+set_para(doc.paragraphs[66], "本系统旨在构建一个集古风叙事、角色互动、剧情探索于一体的沉浸式文字冒险游戏平台，以满足玩家对古风穿越题材的多样化需求。系统核心功能包含玩家身份自定义（支持自定义女主姓名）、四位可攻略男主独立好感度系统（0-100数值范围）、多分支剧情选择（每次剧情结尾提供3个固定选项+自由输入对话）、AI动态剧情生成（支持玩家自由文字输入互动）、场景切换（姜府、皇宫、摄政王府、谢家府邸、边关战场、市井长街）、自动存档读档（6个存档位，支持删除和重命名）、属性数值系统（智谋、武力、声望、悟性、美貌、恶念）。")
+set_para(doc.paragraphs[67], "剧情系统支持主线与四位男主个人支线并行发展，玩家的选择不仅影响剧情走向，还会改变男主好感度和自身属性值。立绘系统采用透明PNG格式，根据角色脸部朝向自动调整显示位置（左/中/右），确保视觉效果符合古风审美的同时不遮挡关键界面元素。存档系统基于浏览器localStorage实现本地持久化存储，确保游戏进度在重启后不丢失。")
+set_para(doc.paragraphs[68], "AI动态剧情生成模块支持玩家自由输入对话，智能体大模型根据当前场景、角色关系和玩家输入实时生成剧情文本，实现真正的开放式互动体验。属性系统随剧情发展动态变化，AI模型根据玩家选择自动计算智谋、武力、声望、悟性、美貌、恶念等数值，影响后续剧情走向和结局。")
+set_para(doc.paragraphs[69], "系统设计注重界面美观与交互流畅，采用古风卷轴设计风格，淡雅水墨配色，营造浓厚的古风氛围。同时通过合理的z-index层级管理，确保立绘、对话框、背景层的正确显示顺序，避免视觉遮挡问题。")
+
+# ===== 2 概要设计 =====
+set_para(doc.paragraphs[70], "2 概要设计", bold=True)
+set_para(doc.paragraphs[71], "2.1 主界面设计", bold=True)
+set_para(doc.paragraphs[72], "《嫣落尘渊》游戏主界面设计采用古风卷轴风格，以淡雅水墨配色为主色调，营造浓厚的古风氛围。界面结构分为三层：底部为背景层，展示当前场景图片；中间为角色立绘层，根据剧情需要展示1-3个角色立绘；顶部为对话框层，显示角色对话和旁白文本。")
+set_para(doc.paragraphs[73], "")
+set_para(doc.paragraphs[74], "游戏顶部设有导航栏，包含存档、好感、属性、重置四个功能按钮，方便玩家随时查看和管理游戏状态。场景标题显示在导航栏左侧，实时展示当前所在场景名称。")
+set_para(doc.paragraphs[75], "")
+set_para(doc.paragraphs[76], "")
+set_para(doc.paragraphs[77], "角色立绘采用透明PNG格式，根据脸部朝向自动定位（朝左显示在左侧，朝右显示在右侧，正面显示在中间），立绘大小根据界面高度自适应调整，确保不遮挡顶部导航栏和底部对话框。")
+set_para(doc.paragraphs[78], "")
+set_para(doc.paragraphs[79], "对话框采用古风卷轴设计，包含角色名称、对话文本、选项按钮和自定义输入框，支持分次展示旁白和对话，提升阅读体验。")
+set_para(doc.paragraphs[80], "")
+set_para(doc.paragraphs[81], "")
+set_para(doc.paragraphs[82], "存档管理界面采用3×2网格布局，展示6个存档位，每个存档位显示存档名称、保存时间，并提供删除和重命名功能按钮。")
+set_para(doc.paragraphs[83], "")
+set_para(doc.paragraphs[84], "")
+
+# ===== 2.2 存储结构设计 =====
+set_para(doc.paragraphs[85], "2.2 存储结构设计", bold=True)
+set_para(doc.paragraphs[86], "资源分类与存储目录规划", bold=True)
+set_para(doc.paragraphs[87], "基于系统功能与资源类型，划分核心存储目录，统一遵循Web项目资源管理路径规范，具体结构如下：")
+set_para(doc.paragraphs[88], "├── index.html          # 游戏主页面入口")
+
+# 添加目录结构
+new_para = doc.add_paragraph("├── css/                # 样式文件目录")
+new_para = doc.add_paragraph("│   └── style.css       # 游戏全局样式")
+new_para = doc.add_paragraph("├── js/                 # JavaScript逻辑目录")
+new_para = doc.add_paragraph("│   ├── engine.js       # 游戏引擎核心逻辑")
+new_para = doc.add_paragraph("│   ├── save.js         # 存档读档系统")
+new_para = doc.add_paragraph("│   ├── affection.js    # 好感度系统")
+new_para = doc.add_paragraph("│   ├── ai_story.js     # AI动态剧情生成")
+new_para = doc.add_paragraph("│   └── data/           # 剧情数据目录")
+new_para = doc.add_paragraph("│       ├── story_prologue.js  # 序章剧情")
+new_para = doc.add_paragraph("│       ├── story_main.js      # 主线剧情")
+new_para = doc.add_paragraph("│       ├── story_xiao.js      # 萧若河支线")
+new_para = doc.add_paragraph("│       ├── story_xie.js       # 谢玉衡支线")
+new_para = doc.add_paragraph("│       ├── story_li.js        # 李自清支线")
+new_para = doc.add_paragraph("│       └── story_chu.js       # 楚昭云支线")
+new_para = doc.add_paragraph("├── images/             # 图片资源目录")
+new_para = doc.add_paragraph("│   ├── characters/     # 角色立绘")
+new_para = doc.add_paragraph("│   └── backgrounds/    # 场景背景")
+
+# ===== 2.3 系统功能设计 =====
+set_para(doc.paragraphs[89], "2.3 系统功能设计", bold=True)
+set_para(doc.paragraphs[90], "本系统的功能设计以玩家体验为核心，深度融合古风穿越题材特性与现代Web技术，旨在构建一个交互丰富、视觉精美的沉浸式文字冒险游戏。通过对乙女游戏用户行为路径的深度调研，我们确立了系统的核心功能模块，包括玩家身份自定义、剧情展示与分支选择、角色立绘管理、好感度系统、属性养成、存档读档、AI动态剧情生成、场景切换等。")
+set_para(doc.paragraphs[91], "在设计过程中，我们着重关注功能的完整性与扩展性，采用模块化架构设计，确保系统能够轻松适配未来剧情扩展与功能升级。例如，通过JSON格式存储剧情数据，可无缝添加新的剧情分支和角色；利用CSS变量实现主题切换，支持多种古风配色方案；预留AI接口，支持接入不同的大模型服务。此外，系统特别强化了存档功能的实用性，支持6个存档位、自定义存档名和删除功能，满足玩家多存档管理需求。")
+set_para(doc.paragraphs[92], "本系统功能设计的核心目标在于打造一个既满足玩家情感体验需求，又能通过技术创新实现高度互动性的文字冒险游戏，为古风游戏开发提供新的技术思路和实践参考。")
+
+# 清空旧的2.3节多余内容
+for i in range(93, 111):
+    if i < len(doc.paragraphs):
+        doc.paragraphs[i].text = ''
+
+# 2.3.1 玩家身份自定义功能
+new_para = add_bold_paragraph(doc, "2.3.1 玩家身份自定义功能")
+new_para = doc.add_paragraph("玩家身份自定义功能允许玩家在游戏开始时输入自定义姓名，默认名为'姜嫣'。系统会将玩家姓名存储在全局游戏状态中，并在剧情文本中自动替换。")
+add_code_block(doc, [
+    "let gameState = {",
+    "    playerName: '姜嫣',",
+    "    currentNodeId: 'prologue_1',",
+    "    affection: { xiao: 0, xie: 0, li: 0, chu: 0 },",
+    "    stats: { wisdom: 50, strength: 30, reputation: 10, perception: 40, beauty: 60, malice: 10 },",
+    "    flags: {}",
+    "};",
+    "",
+    "function startGame() {",
+    "    const nameInput = document.getElementById('player-name').value.trim();",
+    "    gameState.playerName = nameInput || '姜嫣';",
+    "    gameState.currentNodeId = 'prologue_1';",
+    "    showGameScreen();",
+    "    renderNode('prologue_1');",
+    "}"
+], "js/engine.js 第1-27行")
+
+# 2.3.2 剧情展示与分支选择功能
+new_para = add_bold_paragraph(doc, "2.3.2 剧情展示与分支选择功能")
+new_para = doc.add_paragraph("剧情展示功能负责渲染剧情文本、角色名称和选项按钮。分支选择功能支持玩家通过点击选项跳转到不同的剧情节点，实现多分支剧情体验。")
+add_code_block(doc, [
+    "function renderNode(nodeId) {",
+    "    const node = getNode(nodeId);",
+    "    gameState.currentNodeId = nodeId;",
+    "    autoSave();",
+    "",
+    "    document.getElementById('scene-title').textContent = node.scene || '';",
+    "    renderCharacters(node.characters);",
+    "",
+    "    const nameEl = document.getElementById('dialog-name');",
+    "    const textEl = document.getElementById('dialog-text');",
+    "    const choicesEl = document.getElementById('dialog-choices');",
+    "",
+    "    nameEl.textContent = node.character;",
+    "    textEl.textContent = replacePlayerName(node.text);",
+    "",
+    "    if (node.choices && node.choices.length > 0) {",
+    "        node.choices.forEach((choice, index) => {",
+    "            const btn = document.createElement('button');",
+    "            btn.className = 'choice-btn';",
+    "            btn.textContent = replacePlayerName(choice.text);",
+    "            btn.onclick = () => handleChoice(choice);",
+    "            choicesEl.appendChild(btn);",
+    "        });",
+    "    }",
+    "}"
+], "js/engine.js 第52-118行")
+
+# 2.3.3 角色立绘管理功能
+new_para = add_bold_paragraph(doc, "2.3.3 角色立绘管理功能")
+new_para = doc.add_paragraph("角色立绘管理功能负责根据剧情节点配置渲染角色立绘，支持左、中、右三个位置的立绘展示。立绘采用透明PNG格式，根据角色脸部朝向自动调整显示位置。")
+add_code_block(doc, [
+    "function renderCharacters(characters) {",
+    "    const leftEl = document.getElementById('char-left');",
+    "    const centerEl = document.getElementById('char-center');",
+    "    const rightEl = document.getElementById('char-right');",
+    "",
+    "    leftEl.classList.remove('show');",
+    "    centerEl.classList.remove('show');",
+    "    rightEl.classList.remove('show');",
+    "",
+    "    if (characters.left) {",
+    "        leftEl.src = characters.left;",
+    "        leftEl.classList.add('show');",
+    "    }",
+    "    if (characters.center) {",
+    "        centerEl.src = characters.center;",
+    "        centerEl.classList.add('show');",
+    "    }",
+    "    if (characters.right) {",
+    "        rightEl.src = characters.right;",
+    "        rightEl.classList.add('show');",
+    "    }",
+    "}"
+], "js/engine.js 第124-155行")
+
+# 2.3.4 好感度系统功能
+new_para = add_bold_paragraph(doc, "2.3.4 好感度系统功能")
+new_para = doc.add_paragraph("好感度系统功能负责管理四位可攻略男主的好感度数值（0-100），玩家的选择会影响对应男主的好感度。系统提供好感度修改、显示和持久化存储功能。")
+add_code_block(doc, [
+    "function updateAffection(char, amount) {",
+    "    if (!gameState.affection[char]) {",
+    "        gameState.affection[char] = 0;",
+    "    }",
+    "    gameState.affection[char] = Math.max(0, Math.min(100, gameState.affection[char] + amount));",
+    "",
+    "    const names = {",
+    "        xiao: '萧若河',",
+    "        xie: '谢玉衡',",
+    "        li: '李自清',",
+    "        chu: '楚昭云'",
+    "    };",
+    "",
+    "    const charName = names[char] || char;",
+    "    const changeText = amount > 0 ? `+${amount}` : amount;",
+    "    showAffectionTip(`${charName} 好感度 ${changeText}`);",
+    "    updateAffectionDisplay();",
+    "}"
+], "js/affection.js 第1-18行")
+
+# 2.3.5 存档读档功能
+new_para = add_bold_paragraph(doc, "2.3.5 存档读档功能")
+new_para = doc.add_paragraph("存档读档功能支持6个存档位的管理，包括保存、读取、删除和重命名功能。存档数据基于浏览器localStorage实现本地持久化存储，确保游戏进度在重启后不丢失。")
+add_code_block(doc, [
+    "const SAVE_KEY_PREFIX = 'yanluochenyuan_save_';",
+    "const MAX_SAVE_SLOTS = 6;",
+    "",
+    "function saveGame(slot) {",
+    "    const saveData = {",
+    "        version: '1.2',",
+    "        playerName: gameState.playerName,",
+    "        currentNodeId: gameState.currentNodeId,",
+    "        affection: gameState.affection,",
+    "        stats: gameState.stats,",
+    "        flags: gameState.flags,",
+    "        timestamp: Date.now(),",
+    "        saveName: '存档 ' + slot",
+    "    };",
+    "    localStorage.setItem(SAVE_KEY_PREFIX + slot, JSON.stringify(saveData));",
+    "    updateSaveSlots();",
+    "}",
+    "",
+    "function deleteSave(slot) {",
+    "    if (confirm('确定要删除此存档吗？')) {",
+    "        localStorage.removeItem(SAVE_KEY_PREFIX + slot);",
+    "        updateSaveSlots();",
+    "    }",
+    "}",
+    "",
+    "function renameSave(slot) {",
+    "    const saveData = localStorage.getItem(SAVE_KEY_PREFIX + slot);",
+    "    if (saveData) {",
+    "        const data = JSON.parse(saveData);",
+    "        const newName = prompt('请输入存档名称：', data.saveName);",
+    "        if (newName !== null && newName.trim() !== '') {",
+    "            data.saveName = newName.trim();",
+    "            localStorage.setItem(SAVE_KEY_PREFIX + slot, JSON.stringify(data));",
+    "            updateSaveSlots();",
+    "        }",
+    "    }",
+    "}"
+], "js/save.js 第1-70行")
+
+# ===== 3 模块设计 =====
+set_para(doc.paragraphs[111], "3 模块设计", bold=True)
+set_para(doc.paragraphs[112], "3.1 系统子程序及功能设计", bold=True)
+set_para(doc.paragraphs[113], "1.游戏引擎模块：包含场景渲染（背景切换、立绘展示）、对话系统（文本展示、选项处理）、剧情管理（节点跳转、分支选择）子程序，实现游戏核心交互逻辑。")
+set_para(doc.paragraphs[114], "2.存档系统模块：通过6个存档位管理（保存、读取、删除）、自定义存档名（重命名功能）、自动存档机制子程序，保障玩家游戏进度安全。")
+set_para(doc.paragraphs[115], "3.角色系统模块：设计好感度管理（数值计算、UI展示）、属性养成（智谋、武力、声望等数值变动）、立绘渲染（位置调整、透明度控制）子程序，实现角色互动与成长。")
+set_para(doc.paragraphs[116], "4.AI剧情生成模块：整合剧情续写（根据场景和角色生成文本）、选项分析（解析玩家输入）、数值计算（根据剧情更新属性）子程序，支持开放式互动体验。")
+
+# ===== 4 详细设计 =====
+set_para(doc.paragraphs[117], "4 详细设计", bold=True)
+set_para(doc.paragraphs[118], "4.1 数据类型定义", bold=True)
+set_para(doc.paragraphs[119], "1.游戏状态：gameState对象，包含playerName（字符串，玩家姓名）、currentNodeId（字符串，当前剧情节点ID）、affection（对象，四位男主好感度）、stats（对象，玩家属性值）、flags（对象，剧情标记）等属性，用于存储与传递游戏进度数据。（代码位置：js/engine.js 第1-7行）")
+set_para(doc.paragraphs[120], "2.剧情节点：StoryNode对象，定义id（字符串，节点唯一标识）、scene（字符串，场景名称）、background（字符串，背景图片路径）、characters（对象，角色立绘配置）、dialogue（数组，对话文本）、choices（数组，选项配置）、next（对象，分支跳转）等字段，承载剧情数据。（代码位置：js/data/story_prologue.js）")
+set_para(doc.paragraphs[121], "3.存档数据：SaveData对象，包含version（字符串，版本号）、playerName（字符串）、currentNodeId（字符串）、affection（对象）、stats（对象）、flags（对象）、timestamp（整数，保存时间戳）、saveName（字符串，存档名称）等属性，记录游戏存档数据。（代码位置：js/save.js 第5-15行）")
+
+# ===== 5 测试分析 =====
+set_para(doc.paragraphs[122], "5 测试分析", bold=True)
+set_para(doc.paragraphs[123], "5.1 测试用例设计", bold=True)
+set_para(doc.paragraphs[124], "1.功能测试：覆盖游戏开始（自定义姓名）、剧情展示（文本逐字显示）、选项选择（分支跳转）、立绘渲染（位置调整）、存档管理（保存/读取/删除/重命名）、好感度系统（数值变动）、属性系统（数值计算）等场景，编写用例验证功能完整性与正确性。")
+set_para(doc.paragraphs[125], "2.兼容性测试：在不同浏览器（Chrome、Firefox、Edge）、不同屏幕分辨率下，测试界面适配、功能运行情况，确保跨平台兼容。")
+set_para(doc.paragraphs[126], "3.性能测试：测试场景切换流畅度、立绘加载速度、存档读写效率，检测是否存在卡顿、崩溃问题；测试AI剧情生成响应时间，优化用户体验。")
+set_para(doc.paragraphs[127], "5.2 测试结果分析", bold=True)
+set_para(doc.paragraphs[128], "1.功能层面：核心功能（剧情展示、分支选择、存档管理）均通过测试，立绘位置调整后不再遮挡顶部导航栏，对话框分层展示提升了阅读体验；边缘场景（存档位为空、AI服务不可用）处理逻辑完善，保障系统鲁棒性。")
+set_para(doc.paragraphs[129], "2.兼容性层面：适配主流浏览器和屏幕分辨率，界面布局、功能操作无明显异常，满足跨平台使用需求。")
+set_para(doc.paragraphs[130], "3.性能层面：场景切换、立绘加载流畅，存档读写响应迅速，AI剧情生成在网络正常情况下响应时间控制在合理范围；但极端网络环境下AI响应较慢，已增加本地剧情缓存作为 fallback 机制。")
+
+# ===== 6 工作总结 =====
+set_para(doc.paragraphs[131], "6 工作总结", bold=True)
+set_para(doc.paragraphs[132], "6.1 我的任务", bold=True)
+set_para(doc.paragraphs[133], "1.负责游戏整体架构设计，采用模块化思想规划系统功能，划分游戏引擎、存档系统、角色系统、AI剧情生成等核心模块，确保各模块间的解耦与协同。")
+set_para(doc.paragraphs[134], "2.实现游戏界面设计，运用HTML5构建语义化结构，CSS3实现古风卷轴视觉效果，通过z-index层级管理确保背景、立绘、对话框的正确显示顺序，优化立绘位置避免遮挡关键界面元素。")
+set_para(doc.paragraphs[135], "3.开发存档系统，支持6个存档位管理，实现保存、读取、删除、重命名功能，基于localStorage实现本地持久化存储，确保游戏进度在重启后不丢失。")
+set_para(doc.paragraphs[136], "6.2 实习心得", bold=True)
+set_para(doc.paragraphs[137], "通过本次项目，我成功开发了一个功能丰富、交互流畅的《嫣落尘渊》古风穿越乙女文字剧情游戏。项目从需求调研、架构设计、功能开发到测试上线，全程遵循Web前端开发的最佳实践，确保系统功能完整、界面美观。")
+set_para(doc.paragraphs[138], "在需求分析阶段，我深入研究了乙女游戏用户的核心需求，明确了剧情分支、角色互动、存档管理等核心模块的功能诉求，重点聚焦玩家沉浸体验与交互便捷性。系统设计阶段，我采用模块化架构与组件化思想，通过JSON格式存储剧情数据，CSS变量实现主题切换，预留AI接口支持大模型接入，确保系统的可扩展性。")
+set_para(doc.paragraphs[139], "编码实现阶段，我重点完成了游戏引擎核心逻辑、立绘渲染系统、对话框交互、存档管理等功能：利用CSS定位技术实现立绘多层展示，通过JavaScript事件处理实现选项交互与剧情跳转，基于localStorage实现存档持久化存储。测试阶段，通过功能测试与兼容性测试，及时修复了立绘遮挡、存档丢失等问题，确保系统稳定运行。")
+set_para(doc.paragraphs[140], "此外，项目特别注重UI/UX设计，通过古风卷轴风格、淡雅水墨配色、流畅的动画效果提升界面友好度，同时强化数据安全与权限控制，保障玩家存档数据安全。")
+set_para(doc.paragraphs[141], "总的来说，本项目不仅提升了我对Web前端技术栈（HTML5、CSS3、JavaScript）的实战能力，也让我深入理解了游戏开发中的核心技术要点。期待游戏在实际应用中为玩家提供沉浸式的古风穿越体验，同时为团队后续开发更复杂的游戏应用积累宝贵经验。")
+
+# ===== 参考文献 =====
+set_para(doc.paragraphs[142], "参考文献", bold=True)
+set_para(doc.paragraphs[143], "1. MDN Web Docs：《HTML5 教程》")
+set_para(doc.paragraphs[144], "2. MDN Web Docs：《CSS3 教程》")
+set_para(doc.paragraphs[145], "3. MDN Web Docs：《JavaScript 教程》")
+set_para(doc.paragraphs[146], "4. 易次元官方网站：《易次元游戏创作平台》")
+set_para(doc.paragraphs[147], "5. DeepSeek API文档：《DeepSeek 大模型接口文档》")
+
+doc.save('D:/嫣落尘渊/孙若妍生产实习报告_新.docx')
+print('实验报告已成功生成！')
+print(f'总段落数: {len(doc.paragraphs)}')

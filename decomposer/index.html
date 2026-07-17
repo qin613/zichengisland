@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEURAL DECOMPOSER // 神经任务拆解系统</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-dot" id="statusDot"></span>
+        <span class="topbar-brand">// NEURAL_DECOMPOSER</span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换主题">
+          <span class="icon-sun">☀️ 浅色</span>
+          <span class="icon-moon">🌙 深色</span>
+        </button>
+        <div class="topbar-status">
+          <span id="statusLabel">SYS_INIT…</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+
+      <!-- 主区域 -->
+      <div class="main-col">
+
+        <!-- 输入区 -->
+        <div class="card input-card">
+          <div class="card-body">
+            <label class="input-label" for="taskInput">▸ 任务描述输入</label>
+            <textarea
+              id="taskInput"
+              class="input-field"
+              placeholder="> 用自然语言描述你想要完成的目标…&#10;> 例如：开发一个包含用户认证、限流和接口文档的 REST API 后端服务"
+              rows="4"
+              maxlength="2000"
+            ></textarea>
+            <div class="input-toolbar">
+              <span class="char-hint" id="charHint">[ 0 / 2000 ]</span>
+              <button id="submitBtn" class="btn btn-primary" onclick="handleSubmit()">
+                ◈ 执行拆解
+                <span style="font-size:10px;opacity:0.6">⌘↵</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨架加载 -->
+        <div class="skeleton-container" id="skeleton">
+          <div class="skeleton-card">
+            <div class="skeleton-line w-60"></div>
+            <div class="skeleton-line w-90 short"></div>
+            <div class="skeleton-line w-35 short"></div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-85 short"></div>
+            <div class="skeleton-line w-30 short"></div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-line w-55"></div>
+            <div class="skeleton-line w-80 short"></div>
+            <div class="skeleton-line w-40 short"></div>
+          </div>
+        </div>
+
+        <!-- 错误 -->
+        <div class="error-banner" id="errorBanner">
+          <div class="error-banner-icon">!</div>
+          <span class="error-banner-text" id="errorText"></span>
+          <button class="btn btn-ghost" onclick="handleSubmit()">重试</button>
+        </div>
+
+        <!-- 结果区 -->
+        <section class="results-section" id="resultsSection">
+          <div class="results-header">
+            <span class="results-title">▾ 拆解输出</span>
+            <span class="results-badge" id="resultsBadge">0</span>
+          </div>
+          <div class="task-list" id="taskList"></div>
+          <div class="results-toolbar" id="resultsToolbar">
+            <button class="btn btn-secondary" onclick="exportMarkdown()">⬇ 导出 MD</button>
+            <button class="btn btn-secondary" onclick="exportJSON()">⬇ 导出 JSON</button>
+            <button class="btn btn-ghost" onclick="clearResults()">清除</button>
+          </div>
+        </section>
+
+        <!-- 空状态 -->
+        <div class="empty" id="emptyState">
+          <div class="empty-icon">◈</div>
+          <h3 class="empty-title">输入任务，启动神经拆解</h3>
+          <p class="empty-desc">
+            深度语义分析引擎将解析你的任务描述，<br>自动拆解为结构化子任务矩阵，包含优先级、耗时与依赖关系。
+          </p>
+          <div class="prompt-chips">
+            <button class="chip" onclick="fillExample('开发一个包含用户认证、限流和接口文档的 REST API 后端服务')">
+              ▸ 构建 REST API 后端
+            </button>
+            <button class="chip" onclick="fillExample('策划并执行一个面向1000人的 SaaS 产品线上发布会')">
+              ▸ 策划产品发布会
+            </button>
+            <button class="chip" onclick="fillExample('将现有单体应用零停机迁移到微服务架构')">
+              ▸ 单体迁移微服务
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 侧栏 -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-head">
+          <h3>◫ 历史记录</h3>
+          <button class="btn btn-danger-ghost" id="btnClearHistory" onclick="clearHistory()">清除</button>
+        </div>
+        <div class="sidebar-list" id="historyList">
+          <div class="sidebar-empty">暂无记录<br>拆解后的任务矩阵<br>将显示在此处</div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-layer" id="toastLayer"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
