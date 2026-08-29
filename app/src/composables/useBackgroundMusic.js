@@ -102,17 +102,15 @@ export function useBackgroundMusic() {
     }
   }
 
-  /** 初始化：监听路由变化自动切换 */
+  /** 初始化：监听路由变化自动切换（默认不自动播放，需用户手动开启） */
   function init() {
     if (_initialized) return
     _initialized = true
 
-    // 首次进入根据当前路由播放
+    // 首次进入根据当前路由设置曲目，但不自动播放
     if (route.name) {
       const track = getTrackForRoute(route.name)
       switchTrack(track)
-      const audio = getAudio()
-      audio.play().catch(() => {})
     }
 
     // 监听路由变化
