@@ -7,3 +7,12 @@ dist/
 .claude/
 .playwright-mcp/
 *.log
+.zcode/
+.workbuddy/
+.edge-debug/
+.edge-debug2/
+netease-api/
+ocean-final.png
+ocean-site-panel.png
+*.pptx
+*.mp4

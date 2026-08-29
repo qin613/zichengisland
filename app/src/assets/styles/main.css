@@ -21,19 +21,16 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--space-deepest);
+  background: #05070d;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 暖白治愈背景 */
+/* 海洋深色底（避免加载间隙露出暖白闪黄） */
 #app {
   position: relative;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(212, 163, 115, 0.04), transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(201, 125, 94, 0.03), transparent 40%),
-    linear-gradient(160deg, var(--space-deep), var(--space-deepest) 55%, #f0ece6);
+  background: transparent;
 }
 
 /* ===== 玻璃拟态工具类 ===== */

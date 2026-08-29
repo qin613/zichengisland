@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>程序化海洋 · Procedural Ocean (WebGPU / TSL)</title>
+  <style>
+    :root {
+      --glass-bg: rgba(18, 26, 40, 0.42);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --text: #eef4ff;
+      --accent: #7fd4ff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #05070d url('./ocean-fallback.png') center / cover no-repeat fixed; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      -webkit-tap-highlight-color: transparent;
+    }
+    #app { position: fixed; inset: 0; }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    /* ===== 加载界面 ===== */
+    #loading {
+      position: fixed; inset: 0; z-index: 30;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: linear-gradient(rgba(5, 7, 13, 0.5), rgba(5, 7, 13, 0.72)), #05070d url('./ocean-fallback.png') center / cover no-repeat;
+      transition: opacity 0.8s ease;
+    }
+    #loading.hide { opacity: 0; pointer-events: none; }
+    .spinner {
+      width: 54px; height: 54px; border-radius: 50%;
+      border: 3px solid rgba(127, 212, 255, 0.18);
+      border-top-color: var(--accent);
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading .title { font-size: 1.05rem; letter-spacing: 0.18em; font-weight: 600; }
+    #loading .sub { font-size: 0.8rem; opacity: 0.65; letter-spacing: 0.05em; }
+
+    /* ===== 错误界面 ===== */
+    #error {
+      position: fixed; inset: 0; z-index: 40; display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; padding: 24px; text-align: center;
+      background: linear-gradient(rgba(20, 8, 12, 0.6), rgba(5, 7, 13, 0.82)), #05070d url('./ocean-fallback.png') center / cover no-repeat;
+    }
+    #error.show { display: flex; }
+    #error .icon { font-size: 2.6rem; }
+    #error .msg { font-size: 0.95rem; line-height: 1.6; max-width: 520px; opacity: 0.9; }
+    #error .hint { font-size: 0.8rem; opacity: 0.6; line-height: 1.6; max-width: 520px; }
+
+    /* ===== 控制面板 ===== */
+    #controls {
+      position: fixed; left: 18px; bottom: 18px; z-index: 20;
+      width: 256px; padding: 16px 16px 14px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      user-select: none;
+    }
+    #controls .head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    #controls .name { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; }
+    #fps {
+      font-size: 0.72rem; font-variant-numeric: tabular-nums;
+      color: var(--accent); opacity: 0.9;
+      padding: 2px 8px; border-radius: 8px;
+      background: rgba(127, 212, 255, 0.12);
+    }
+    .ctrl { margin-bottom: 12px; }
+    .ctrl:last-child { margin-bottom: 0; }
+    .ctrl label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.74rem; opacity: 0.82; margin-bottom: 6px;
+    }
+    .ctrl label .val { font-variant-numeric: tabular-nums; color: var(--accent); opacity: 1; }
+    input[type="range"] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px; border-radius: 4px;
+      background: rgba(255, 255, 255, 0.16); outline: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+      box-shadow: 0 0 10px rgba(127, 212, 255, 0.6);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 15px; height: 15px; border: none; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+    }
+    .switch { display: flex; align-items: center; justify-content: space-between; }
+    .switch span { font-size: 0.74rem; opacity: 0.82; }
+    .toggle {
+      position: relative; width: 42px; height: 22px; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.16); cursor: pointer; transition: background 0.2s;
+    }
+    .toggle.on { background: rgba(127, 212, 255, 0.55); }
+    .toggle::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px; border-radius: 50%; background: #fff;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(20px); }
+
+    /* 背景嵌入模式：隐藏控制面板 */
+    body.bg-mode #controls { display: none; }
+
+    .tip {
+      position: fixed; right: 18px; bottom: 18px; z-index: 20;
+      font-size: 0.68rem; opacity: 0.45; letter-spacing: 0.04em;
+      pointer-events: none; text-align: right; line-height: 1.5;
+    }
+    body.bg-mode .tip { display: none; }
+  </style>
+
+  <!-- 原生 ES Module + importmap：three.js 已本地化到 vendor/，无需外网 CDN -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/build/three.webgpu.js",
+      "three/webgpu": "./vendor/three/build/three.webgpu.js",
+      "three/tsl": "./vendor/three/build/three.tsl.js",
+      "three/addons/": "./vendor/three/addons/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- 加载界面 -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <div class="title">正在生成海洋</div>
+    <div class="sub">WebGPU · TSL · Gerstner Waves</div>
+  </div>
+
+  <!-- 错误界面 -->
+  <div id="error">
+    <div class="icon">🌊</div>
+    <div class="msg" id="error-msg">当前环境不支持 WebGPU。</div>
+    <div class="hint">
+      请使用支持 WebGPU 的浏览器（Chrome / Edge 113+，或 Safari 18+ / Firefox 中开启 WebGPU）。
+      同时确保通过 http(s) 本地服务器访问，而非直接以 file:// 打开。
+    </div>
+  </div>
+
+  <!-- 控制面板 -->
+  <div id="controls">
+    <div class="head">
+      <div class="name">海洋控制台</div>
+      <div id="fps">— FPS</div>
+    </div>
+
+    <div class="ctrl">
+      <label>SEA STATE <span class="val" id="sea-val">0.60</span></label>
+      <input type="range" id="sea" min="0" max="1" step="0.01" value="0.6" />
+    </div>
+
+    <div class="ctrl">
+      <label>TIME OF DAY <span class="val" id="tod-val">0.30</span></label>
+      <input type="range" id="tod" min="0" max="1" step="0.001" value="0.3" />
+    </div>
+
+    <div class="ctrl switch">
+      <span>DRIFT（自动漂移）</span>
+      <div class="toggle on" id="drift"></div>
+    </div>
+  </div>
+
+  <div class="tip">拖拽旋转 · 滚轮缩放 · 双指手势</div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

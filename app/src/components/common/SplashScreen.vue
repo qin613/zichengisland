@@ -101,17 +101,8 @@ onUnmounted(() => {
 
 <template>
   <div class="splash-overlay" :class="{ leaving }">
-    <div class="bg-light" />
-    <div class="bg-light2" />
-
     <div class="clouds-distant">
       <div class="dcloud" /><div class="dcloud" /><div class="dcloud" />
-    </div>
-
-    <div class="cloud-sea">
-      <div class="csea" /><div class="csea" /><div class="csea" />
-      <div class="csea" /><div class="csea" /><div class="csea" />
-      <div class="csea" />
     </div>
 
     <!-- Logo 巨幅居中弹入 -->
@@ -173,9 +164,6 @@ onUnmounted(() => {
 <style scoped>
 .splash-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: rgba(250,248,245,0.35);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
   overflow: hidden;
   transition: opacity 0.6s ease;
   font-family: 'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,-apple-system,sans-serif;
@@ -183,9 +171,7 @@ onUnmounted(() => {
 }
 .splash-overlay.leaving { opacity: 0; pointer-events: none; }
 
-.bg-light, .bg-light2 { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; }
-.bg-light { top: -15%; right: 5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(220,210,195,0.2), rgba(230,220,205,0.08) 40%, transparent 70%); }
-.bg-light2 { bottom: -10%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(210,200,185,0.15), rgba(220,210,195,0.05) 40%, transparent 70%); }
+.bg-light, .bg-light2 { display: none; }
 
 .clouds-distant { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 .dcloud { position: absolute; border-radius: 50%; filter: blur(30px); background: rgba(255,255,255,0.5); animation: dcloudDrift var(--dcd, 70s) linear infinite; }
@@ -193,17 +179,6 @@ onUnmounted(() => {
 .dcloud:nth-child(2) { width: 250px; height: 50px; top: 14%; left: 55%; --dcd: 55s; animation-delay: -20s; }
 .dcloud:nth-child(3) { width: 280px; height: 55px; top: 5%; left: 80%; --dcd: 60s; animation-delay: -35s; }
 @keyframes dcloudDrift { from { transform: translateX(0); } to { transform: translateX(calc(110vw + 400px)); } }
-
-.cloud-sea { position: fixed; bottom: 0; left: 0; width: 100%; height: 22%; z-index: 4; pointer-events: none; }
-.csea { position: absolute; border-radius: 50%; filter: blur(6px); animation: cseaFloat var(--csf, 7s) ease-in-out infinite; }
-.csea:nth-child(1) { width: 350px; height: 90px; bottom: 3%; left: -8%; --csf: 7s; background: rgba(255,255,255,0.7); }
-.csea:nth-child(2) { width: 400px; height: 100px; bottom: 1%; left: 12%; --csf: 8.5s; animation-delay: -2s; background: rgba(255,254,252,0.75); }
-.csea:nth-child(3) { width: 320px; height: 85px; bottom: 2%; left: 32%; --csf: 7.5s; animation-delay: -4s; background: rgba(255,253,250,0.7); }
-.csea:nth-child(4) { width: 380px; height: 95px; bottom: 0%; left: 48%; --csf: 9s; animation-delay: -1.5s; background: rgba(255,255,254,0.78); }
-.csea:nth-child(5) { width: 360px; height: 100px; bottom: 2%; left: 65%; --csf: 8s; animation-delay: -3s; background: rgba(255,252,249,0.72); }
-.csea:nth-child(6) { width: 340px; height: 88px; bottom: 4%; left: 82%; --csf: 7.8s; animation-delay: -5s; background: rgba(255,254,251,0.7); }
-.csea:nth-child(7) { width: 300px; height: 80px; bottom: 1%; left: 22%; --csf: 6.5s; animation-delay: -1s; background: rgba(255,253,248,0.73); }
-@keyframes cseaFloat { 0%,100% { transform: translateY(0) scale(1); } 40% { transform: translateY(-8px) scale(1.03); } 60% { transform: translateY(-8px) scale(1.03); } }
 
 /* Logo — 居中 */
 .page-logo {

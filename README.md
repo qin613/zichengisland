@@ -138,9 +138,10 @@
 
 ## 🖼️ 界面特色
 
-- **登岛登录页** — 品牌大字「自成岛」居中弹出，含密码/验证码双登录方式，云海浮动动画
-- **玻璃拟态设计** — 毛玻璃效果、暖白治愈色系（#d4a373 暖沙金主色调）
-- **动态粒子星空** — Three.js 实时渲染背景
+- **登岛登录页** — 品牌大字「自成岛」居中弹出，含密码/验证码双登录方式
+- **程序化 WebGPU 海洋背景** — Gerstner 波场 + TSL 解析天空实时渲染，支持 WebGPU 不可用时自动降级为静态兜底图
+- **海洋控制台** — 左上角悬浮按钮实时调节 SEA STATE（海况）/ TIME OF DAY（昼夜）/ DRIFT（自动漂移）/ 昼夜自动循环
+- **玻璃拟态设计** — 毛玻璃效果卡片，与海洋深色主题融合
 - **自适应布局** — PC / 平板 / 手机全端适配，移动端汉堡菜单折叠
 - **全局背景音乐** — 右下角喇叭按钮控制，根据页面路由自动切换曲目
 - **热更新开发** — Vite HMR 实时预览
@@ -155,7 +156,7 @@
 | 构建工具 | [Vite](https://vite.dev/) |
 | 状态管理 | [Pinia](https://pinia.vuejs.org/) |
 | 路由 | [Vue Router](https://router.vuejs.org/) |
-| 3D 背景 | [Three.js](https://threejs.org/) + postprocessing |
+| 3D 背景 | [Three.js](https://threejs.org/) WebGPU 渲染器 + TSL + postprocessing（Gerstner 海洋 / 粒子星空） |
 | 音效引擎 | Web Audio API（合成噪音 + 自然音效混音 + 全局背景音乐） |
 | 音乐播放器 | [NeteaseCloudMusicApiEnhanced](https://github.com/inautia/NeteaseCloudMusicApiEnhanced)（网易云音乐 API） |
 | 后端（拆解模块） | [Express](https://expressjs.com/) + [DeepSeek API](https://platform.deepseek.com/) |
@@ -209,6 +210,24 @@ npm start
 
 > ⚠️ **注意**：前端 Vite 开发服务器会将 `/api` 请求代理到后端 `localhost:3000`。如遇代理问题（Windows 环境），前端 API 会自动直连后端端口。
 
+### 网易云音乐 API（音乐模块在线播放）
+
+音乐模块的在线播放依赖本地网易云 API 服务（需单独启动）：
+
+```bash
+# 从 https://github.com/inautia/NeteaseCloudMusicApiEnhanced 获取
+# 或使用本地已有的 netease-api/ 目录
+
+cd netease-api
+npm install
+
+# 启动服务（必须指定 3001 端口，避免与后端 3000 冲突）
+PORT=3001 node app.js
+# Windows CMD: set PORT=3001 && node app.js
+```
+
+> 💡 未启动此服务时，音乐模块的白噪音混音台不受影响，仅在线搜索/播放功能不可用。
+
 ---
 
 ## 📁 项目结构
@@ -216,16 +235,17 @@ npm start
 ```
 ├── app/                         ← 前端主应用 (Vue 3 + Vite)
 │   ├── public/
+│   │   ├── ocean/               # 程序化 WebGPU 海洋背景（iframe 嵌入 + three.js vendor + 兜底图）
 │   │   ├── sounds/              # 音效文件（mp3）
 │   │   ├── yanluochenyuan/      # 嫣落尘渊游戏资源（图片/剧情）
 │   │   └── favicon.svg
 │   ├── src/
-│   │   ├── api/                 # API 接口封装（天气、菜谱、国家、拆解等）
+│   │   ├── api/                 # API 接口封装（天气、菜谱、国家、网易云、拆解等）
 │   │   ├── assets/styles/       # 全局样式（CSS 变量 + 基础样式）
 │   │   ├── components/
-│   │   │   ├── common/          # 通用组件（GlassCard, SpeakerToggle, VideoPlayerModal, SplashScreen 等）
+│   │   │   ├── common/          # 通用组件（GlassCard, OceanBackground, SplashScreen, SpeakerToggle 等）
 │   │   │   └── layout/          # 布局组件（AppHeader, AppFooter）
-│   │   ├── composables/         # 组合式函数（音频混音、背景音乐、定位、本地存储等）
+│   │   ├── composables/         # 组合式函数（音频混音、网易云播放器、背景音乐、定位、本地存储等）
 │   │   ├── data/                # 数据配置（模块、菜谱、运动、学习题库、国家等）
 │   │   ├── router/              # 路由配置
 │   │   ├── stores/              # Pinia 状态管理（收藏、健康、学习、运动、待办）
@@ -241,6 +261,7 @@ npm start
 │   └── services/
 │       └── deepseek.js          # DeepSeek API 封装（Prompt 构造 + 响应解析）
 │
+├── netease-api/                 ← 网易云音乐 API 服务（第三方，PORT=3001 启动，不入库）
 ├── login/                       ← 登录页面（3D 小岛 + 粒子动画）
 ├── decomposer/                  ← 任务拆解独立版（纯静态页面）
 ├── game/                        ← 嫣落尘渊古风游戏引擎
